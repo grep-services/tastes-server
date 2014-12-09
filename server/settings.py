@@ -77,8 +77,16 @@ INSTALLED_APPS = (
     # 'allauth.socialaccount.providers.facebook',
 
     # other apps
-    'tag',
+    'rest_framework',
+    'main',
 )
+
+REST_FRAMEWORK = {
+    # change later the structure to receive certain key implies that the requests are from the right source not outside.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -123,6 +131,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # don't know what it is, anyway for all-auth
 SITE_ID = 1
