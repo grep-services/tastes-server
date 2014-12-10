@@ -25,8 +25,8 @@ urlpatterns = patterns('',
 
     # test
     # url(r'^image/get/$', views.get_image),
-    url(r'^image/list/$', views.image_list),
     url(r'^image/add/$', views.image_add),
+    url(r'^image/list/$', views.image_list),
 
     # rest
     # url(r'^', include(router.urls)),
