@@ -38,6 +38,7 @@ def image_add(request):
 			# google plugin tester sends chars strangely, so tested by phone directly.
 			tag_list = map(lambda str : str.strip(), tag_str.split(',')) # space parsing as a base.(for viewing)
 			for tag in tag_list:
+				# case insensitive later
 				image.tag.add(Tag.objects.get_or_create(name = tag)[0]) # duplication cannot happen.
 			
 		image.save() # at least 1 tag remains even though other location, tags are not exists.
@@ -58,7 +59,7 @@ def image_tag(request): # add tag to image with image id. actually editing image
 				tag_name = request.POST.get('tag', None)
 				if tag_name != None:
 					# it seems that django automatically cares about duplcation of many-to-many items. now don't care.
-					image.tag.add(Tag.objects.get_or_create(name = tag_name)[0])
+					image.tag.add(Tag.objects.get_or_create(name = tag_name)[0]) # case insensitive later
 					image.save()
 
 					return HttpResponse('success to save tag')
@@ -90,7 +91,12 @@ def image_list(request):
 
 @csrf_exempt
 def tag_list(request):
-	tags = Tag.objects.all()
-	serializer = TagSerializer(tags, many = True)
+	if request.method == 'POST':
+		tag_str = request.POST.get('tag', None)
+		if tag_str != None:
+			# tags = Tag.objects.all()
+			tags = Tag.objects.filter(name__contains = tag_str) # case insensitive later
+			serializer = TagSerializer(tags, many = True)
+			return JSONResponse(serializer.data)
 
-	return JSONResponse(serializer.data)
+	return HttpResponse('failed')
