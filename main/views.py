@@ -2,15 +2,14 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from main.models import Image
+from main.models import Image, Location, Tag
 
 # for rest
-# from django.contrib.auth.models import User, Group
-# from rest_framework import viewsets
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-# from main.serializers import UserSerializer, GroupSerializer
+
 from main.serializers import ImageSerializer
+# from main.forms import ImageForm
 
 # Create your views here.
 
@@ -21,35 +20,19 @@ class JSONResponse(HttpResponse):
 		super(JSONResponse, self).__init__(content, **kwargs)
 
 @csrf_exempt
-def get_image(request):
-	image = Image.objects.get(pk=3)
+def image_add(request):
+	if request.method == 'POST': # not for switch just block any other methods.
+		# there are many ways to do it however first go through fast and simple way.
+		image = Image.objects.create()
+		image.origin = request.FILES['image']
+		image.save()
 
-	text = image.origin.url
-	text += '<p><img src="{image_url}"/></p>'
-
-	return HttpResponse(text.format(
-		image_url = image.origin.url
-		)
-	)
+		return HttpResponse('success')
+		
+	return HttpResponse('failed')
 
 @csrf_exempt
 def image_list(request):
 	images = Image.objects.all()
 	serializer = ImageSerializer(images, many=True)
 	return JSONResponse(serializer.data)
-"""
-class UserViewSet(viewsets.ModelViewSet):
-    
-    # API endpoint that allows users to be viewed or edited.
-    
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    
-    # API endpoint that allows groups to be viewed or edited.
-    
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-"""

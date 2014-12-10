@@ -6,6 +6,6 @@ from main import models
 
 # admin.site.register(models.Item)
 admin.site.register(models.Image)
-# admin.site.register(models.Location)
+admin.site.register(models.Location)
 admin.site.register(models.Tag)
 

@@ -1,7 +1,8 @@
 # from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
-from main.models import Image, Tag
+from main.models import Image, Location, Tag
+# from main.models import Image, Tag
 
 """
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -18,5 +19,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'latitude', 'longitude')
+        # fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'latitude', 'longitude')
+	fields = ('id', 'origin', 'thumbnail', 'date', 'location', 'tag')
 

@@ -24,8 +24,9 @@ urlpatterns = patterns('',
     # url(r'^accounts/', include('allauth.urls')),
 
     # test
-    url(r'^image/get/$', views.get_image),
+    # url(r'^image/get/$', views.get_image),
     url(r'^image/list/$', views.image_list),
+    url(r'^image/add/$', views.image_add),
 
     # rest
     # url(r'^', include(router.urls)),

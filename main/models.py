@@ -4,13 +4,8 @@ from django.db import models
 
 """
 char field : max 256 but should define it. not null default
-foreign key : cascade deletes by default
-"""
-"""
-class Item(models.Model):
-	image = models.ForeignKey('Image')
-	location = models.ForeignKey('Location')
-	tag = models.ForeignKey('Tag')
+one to one : cascade deletes by default
+many to many : not cascade on deletes
 """
 # doesn't seems nginx uses link of media, static so set it directly until the solution found
 # now uses media and media root of settings.
@@ -18,21 +13,49 @@ class Image(models.Model):
 	origin = models.ImageField(upload_to='origin')
 	thumbnail = models.ImageField(upload_to='thumbnail')
 	date = models.DateTimeField(auto_now_add=True)
-	address = models.CharField(max_length=200)
-	latitude = models.FloatField()
-	longitude = models.FloatField()
+	
+	location = models.OneToOneField('Location', null=True, on_delete=models.SET_NULL)
+	tag = models.ManyToManyField('Tag', null=True) # there exists problem that 0-taged image
+	
+	# save. for thumbnail.
+	
+	def create_thumbnail(self):
+                if not self.origin:
+                        return
 
+                if self.thumbnail:
+                        return
+		
+		from PIL import Image
+		from cStringIO import StringIO
+		from django.core.files.base import ContentFile
+
+		image = Image.open(self.origin)
+		resized = image.resize((320, 320), Image.ANTIALIAS) # galaxy 5 1080, iphone 5 640 so 320 enough
+		handler = StringIO()
+
+		try:
+			resized.save(handler, image.format) # save resized to handler with format of the 'image'
+			self.thumbnail.save(self.origin.name, ContentFile(handler.getvalue()))
+		finally:
+			handler.close()
+		
+	def save(self, *args, **kwargs):
+		self.create_thumbnail()
+
+		super(Image, self).save(*args, **kwargs)
+	
 	# delete files on object deletion. db rows will be also deleted cause of cascade option.
 	def delete(self, *args, **kwargs):
 		self.origin.delete()
 		self.thumbnale.delete()
 		super(Image, self).delete(*args, **kwargs)
-"""
+# for later. integration of location will be useful.
 class Location(models.Model):
-	address = models.CharField(max_length=200)
+	address = models.CharField(max_length=200, null=True) # it is possible that only coordinates exists except for address
 	latitude = models.FloatField()
 	longitude = models.FloatField()
-"""
+
 class Tag(models.Model):
 	name = models.CharField(max_length=50)
-	image = models.ForeignKey(Image)
+	# image = models.ForeignKey(Image)
