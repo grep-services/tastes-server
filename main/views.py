@@ -47,6 +47,29 @@ def image_add(request):
 	return HttpResponse('failed')
 
 @csrf_exempt
+def image_tag(request): # add tag to image with image id. actually editing image.
+	if request.method == 'POST':
+		image_id = request.POST.get('id', None)
+
+		if image_id != None:
+			try:
+				image = Image.objects.get(pk = image_id)
+
+				tag_name = request.POST.get('tag', None)
+				if tag_name != None:
+					# it seems that django automatically cares about duplcation of many-to-many items. now don't care.
+					image.tag.add(Tag.objects.get_or_create(name = tag_name)[0])
+					image.save()
+
+					return HttpResponse('success to save tag')
+			except:
+				return HttpResponse('failed. no image matching to the id')
+
+		return HttpResponse('failed. no id')
+
+	return HttpResponse('failed')
+
+@csrf_exempt
 def image_list(request):
 	images = Image.objects.all()
 	serializer = ImageSerializer(images, many=True)
