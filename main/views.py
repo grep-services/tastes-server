@@ -84,10 +84,17 @@ def image_get(request): # get one image
 
 @csrf_exempt
 def image_list(request):
-	images = Image.objects.all()
-	serializer = ImageSerializer(images, many = True)
+	if request.method == 'POST':
+		tag_str = request.POST.get('tag', None)
+		if tag_str != None:
+                        tag_list = map(lambda str : str.strip(), tag_str.split(','))
+                        for tag in tag_list:
+				tags = Tag.objects.filter(name__in = tag_list) # pick tags that name of which is in the list. case insensitive later also
+				images = Image.objects.filter(tag__in = tags) # pick images that tag obj is in the given tag-list.
+				serializer = ImageSerializer(images, many = True)
+				return JSONResponse(serializer.data)
 
-	return JSONResponse(serializer.data)
+	return HttpResponse('failed')
 
 @csrf_exempt
 def tag_list(request):
