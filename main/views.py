@@ -8,7 +8,7 @@ from main.models import Image, Location, Tag
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
-from main.serializers import ImageSerializer
+from main.serializers import ImageSerializer, TagSerializer
 
 # Create your views here.
 
@@ -84,5 +84,13 @@ def image_get(request): # get one image
 @csrf_exempt
 def image_list(request):
 	images = Image.objects.all()
-	serializer = ImageSerializer(images, many=True)
+	serializer = ImageSerializer(images, many = True)
+
+	return JSONResponse(serializer.data)
+
+@csrf_exempt
+def tag_list(request):
+	tags = Tag.objects.all()
+	serializer = TagSerializer(tags, many = True)
+
 	return JSONResponse(serializer.data)

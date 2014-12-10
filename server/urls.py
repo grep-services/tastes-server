@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^image/tag/$', views.image_tag),
     url(r'^image/get/$', views.image_get),
     url(r'^image/list/$', views.image_list),
+    url(r'^tag/list/$', views.tag_list),
 
     # rest
     # url(r'^', include(router.urls)),
