@@ -21,4 +21,4 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         # fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'latitude', 'longitude')
 	fields = ('id', 'origin', 'thumbnail', 'date', 'location', 'tag')
-
+	depth = 1 # in docs, it deals with nested structure.

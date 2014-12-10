@@ -70,6 +70,18 @@ def image_tag(request): # add tag to image with image id. actually editing image
 	return HttpResponse('failed')
 
 @csrf_exempt
+def image_get(request): # get one image
+	if request.method == 'POST':
+		image_id = request.POST.get('id', None)
+
+		if image_id != None:
+			image = Image.objects.get(pk = image_id)
+			serializer = ImageSerializer(image)
+			return JSONResponse(serializer.data)
+
+	return HttpResponse('failed')
+
+@csrf_exempt
 def image_list(request):
 	images = Image.objects.all()
 	serializer = ImageSerializer(images, many=True)
