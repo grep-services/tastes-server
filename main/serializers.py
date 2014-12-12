@@ -20,7 +20,8 @@ class ImageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Image
 		# fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'latitude', 'longitude')
-		fields = ('id', 'origin', 'thumbnail', 'date', 'location', 'tag') # fields that wants to contain
+		# fields = ('id', 'origin', 'thumbnail', 'date', 'location', 'tag') # fields that wants to contain
+		fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'point', 'tag')
 		depth = 1 # in docs, it deals with nested structure.
 
 class TagSerializer(serializers.ModelSerializer):

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.contrib.gis.db.models.fields
 
 
 class Migration(migrations.Migration):
@@ -14,9 +15,11 @@ class Migration(migrations.Migration):
             name='Image',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('origin', models.ImageField(upload_to=b'media/original')),
-                ('thumbnail', models.ImageField(upload_to=b'media/thumbnail')),
+                ('origin', models.ImageField(upload_to=b'origin')),
+                ('thumbnail', models.ImageField(upload_to=b'thumbnail')),
                 ('date', models.DateTimeField(auto_now_add=True)),
+                ('address', models.CharField(max_length=200, null=True)),
+                ('point', django.contrib.gis.db.models.fields.PointField(srid=4326)),
             ],
             options={
             },
@@ -27,20 +30,15 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50)),
-                ('image', models.ForeignKey(to='main.Image')),
             ],
             options={
             },
             bases=(models.Model,),
         ),
-        migrations.CreateModel(
-            name='Test',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('test', models.CharField(max_length=10)),
-            ],
-            options={
-            },
-            bases=(models.Model,),
+        migrations.AddField(
+            model_name='image',
+            name='tag',
+            field=models.ManyToManyField(to='main.Tag', null=True),
+            preserve_default=True,
         ),
     ]

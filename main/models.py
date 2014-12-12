@@ -1,4 +1,5 @@
-from django.db import models
+# from django.db import models
+from django.contrib.gis.db import models
 
 # Create your models here.
 
@@ -14,7 +15,10 @@ class Image(models.Model):
 	thumbnail = models.ImageField(upload_to='thumbnail')
 	date = models.DateTimeField(auto_now_add=True)
 	
-	location = models.OneToOneField('Location', null=True, on_delete=models.SET_NULL)
+	# location = models.OneToOneField('Location', null=True, on_delete=models.SET_NULL)
+        address = models.CharField(max_length=200, null=True) # it is possible that only coordinates exists except for address
+        point = models.PointField(srid=4326) # later, translation of point by json will be done. not now.
+
 	tag = models.ManyToManyField('Tag', null=True) # there exists problem that 0-taged image
 	
 	# save. for thumbnail.
@@ -50,12 +54,11 @@ class Image(models.Model):
 		self.origin.delete()
 		self.thumbnale.delete()
 		super(Image, self).delete(*args, **kwargs)
-# for later. integration of location will be useful.
+# at now, attatch to image. later. seperate it from image and integrate it. that will be useful.
+"""
 class Location(models.Model):
 	address = models.CharField(max_length=200, null=True) # it is possible that only coordinates exists except for address
-	latitude = models.FloatField()
-	longitude = models.FloatField()
-
+	point = models.PointField(srid=4326) # later, translation of point by json will be done. not now.
+"""
 class Tag(models.Model):
 	name = models.CharField(max_length=50)
-	# image = models.ForeignKey(Image)

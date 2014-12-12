@@ -66,6 +66,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # for gis
+    'django.contrib.gis',
 
     # The Django sites framework is required
     'django.contrib.sites',
@@ -108,10 +110,21 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2', => has no attribute 'geo_db_type' error happens.
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'flyingmenu',
+        'USER': 'marine1079',
+        'PASSWORD': '1735ranger',
+        'HOST': 'db-instance.cd8tmalgqn1t.ap-northeast-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
+
+GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'
+
+POSTGIS_VERSION = (2, 1, 3)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/

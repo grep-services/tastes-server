@@ -2,13 +2,17 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from main.models import Image, Location, Tag
+from main.models import Image, Tag
 
 # for rest
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 
 from main.serializers import ImageSerializer, TagSerializer
+
+# for gis
+from django.contrib.gis.geos import *
+from django.contrib.gis.measure import D
 
 # Create your views here.
 
@@ -27,11 +31,15 @@ def image_add(request):
 		image.save() # for many to many, image should have id.
 
 		address = request.POST.get('address', None)
+		if address != None: # seperated from coordinate now.
+			image.address = address
+
 		latitude = request.POST.get('latitude', None)
 		longitude = request.POST.get('longitude', None)
 
 		if latitude != None and longitude != None: # address can be null
-			image.location = Location.objects.create(address = address, latitude = latitude, longitude = longitude)
+			image.point = Point(latitude, longitude)
+			# image.location = Location.objects.create(address = address, point = point)
 
 		tag_str = request.POST.get('tag', None) # actually not null by client. and doesn't need format checking also.
 		if tag_str != None:
@@ -88,10 +96,16 @@ def image_list(request):
 		tag_str = request.POST.get('tag', None)
 		if tag_str != None:
                         tag_list = map(lambda str : str.strip(), tag_str.split(','))
-                        for tag in tag_list:
-				tags = Tag.objects.filter(name__in = tag_list) # pick tags that name of which is in the list. case insensitive later also
-				images = Image.objects.filter(tag__in = tags) # pick images that tag obj is in the given tag-list.
-				serializer = ImageSerializer(images, many = True)
+			tags = Tag.objects.filter(name__in = tag_list) # pick tags that name of which is in the list. case insensitive later also
+			images = Image.objects.filter(tag__in = tags) # pick images that tag obj is in the given tag-list.
+
+			latitude = request.POST.get('latitude', None)
+			longitude = request.POST.get('longitude', None)
+			if latitude != None and longitude != None:
+	                        base = Point(latitude, longitude)
+				distance = 3000 # maybe in meters
+				near = images.filter(point__distance_lte = (base, D(m = distance))).distance(base).order_by('distance')
+				serializer = ImageSerializer(near, many = True)
 				return JSONResponse(serializer.data)
 
 	return HttpResponse('failed')
@@ -101,7 +115,6 @@ def tag_list(request):
 	if request.method == 'POST':
 		tag_str = request.POST.get('tag', None)
 		if tag_str != None:
-			# tags = Tag.objects.all()
 			tags = Tag.objects.filter(name__contains = tag_str) # case insensitive later
 			serializer = TagSerializer(tags, many = True)
 			return JSONResponse(serializer.data)
