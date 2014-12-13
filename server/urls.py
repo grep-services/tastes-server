@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^image/get/$', views.image_get),
     url(r'^image/list/$', views.image_list),
     url(r'^tag/list/$', views.tag_list),
+    url(r'^test/$', views.test),
 
     # rest
     # url(r'^', include(router.urls)),

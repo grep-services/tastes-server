@@ -124,6 +124,8 @@ DATABASES = {
 
 GEOS_LIBRARY_PATH = '/usr/local/lib/libgeos_c.so'
 
+GDAL_LIBRARY_PATH = '/usr/local/lib/libgdal.so'
+
 POSTGIS_VERSION = (2, 1, 3)
 
 # Internationalization

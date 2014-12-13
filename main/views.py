@@ -12,7 +12,7 @@ from main.serializers import ImageSerializer, TagSerializer
 
 # for gis
 from django.contrib.gis.geos import *
-from django.contrib.gis.measure import D
+from django.contrib.gis.measure import Distance, D
 
 # Create your views here.
 
@@ -38,7 +38,8 @@ def image_add(request):
 		longitude = request.POST.get('longitude', None)
 
 		if latitude != None and longitude != None: # address can be null
-			image.point = Point(latitude, longitude)
+			image.point = Point(float(latitude), float(longitude))
+			# image.point = Point(1.234, 1.234)
 			# image.location = Location.objects.create(address = address, point = point)
 
 		tag_str = request.POST.get('tag', None) # actually not null by client. and doesn't need format checking also.
@@ -102,12 +103,28 @@ def image_list(request):
 			latitude = request.POST.get('latitude', None)
 			longitude = request.POST.get('longitude', None)
 			if latitude != None and longitude != None:
-	                        base = Point(latitude, longitude)
-				distance = 3000 # maybe in meters
-				near = images.filter(point__distance_lte = (base, D(m = distance))).distance(base).order_by('distance')
+	                        base = Point(float(latitude), float(longitude))
+				# base.srid = 4326 => it is said that setting default srid is need before calling transform().
+				limit = 3000 # maybe in meters
+				near = images.filter(point__distance_lte = (base, D(m = limit))).distance(base).order_by('distance')
+				# it can increase processing speed but not works yet.
+				"""
+				base.transform(900913)
+				poly = base.buffer(distance * 0.000621 * 2172.344)
+				near = images.filter(point__within = poly)
+				"""
 				serializer = ImageSerializer(near, many = True)
 				return JSONResponse(serializer.data)
 
+	return HttpResponse('failed')
+
+@csrf_exempt
+def test(request):
+	if request.method == 'POST':
+		pnt = GEOSGeometry('SRID=4326;POINT(40.396764 -3.68042)')
+		pnt2 = GEOSGeometry('SRID=4326;POINT(48.835797 2.329102)')
+		d = pnt.distance(pnt2) * 100
+		return HttpResponse(str(d))
 	return HttpResponse('failed')
 
 @csrf_exempt
