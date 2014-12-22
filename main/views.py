@@ -98,7 +98,7 @@ def image_list(request):
 		if tag_str != None:
                         tag_list = map(lambda str : str.strip(), tag_str.split(','))
 			tags = Tag.objects.filter(name__in = tag_list) # pick tags that name of which is in the list. case insensitive later also
-			images = Image.objects.filter(tag__in = tags) # pick images that tag obj is in the given tag-list.
+			images = Image.objects.filter(tag__in = tags).distinct() # pick images that tag obj is in the given tag-list. - remove duplicates using distinct()
 
 			latitude = request.POST.get('latitude', None)
 			longitude = request.POST.get('longitude', None)
