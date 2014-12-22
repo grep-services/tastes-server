@@ -113,8 +113,14 @@ def image_list(request):
 				poly = base.buffer(distance * 0.000621 * 2172.344)
 				near = images.filter(point__within = poly)
 				"""
+				# set dist by distance value.(couldn't find better way yet.)
+				for image in near:
+					image.dist = str(image.distance)
+					image.save()
+
 				serializer = ImageSerializer(near, many = True)
 				return JSONResponse(serializer.data)
+				# return HttpResponse(near[0].address)
 
 	return HttpResponse('failed')
 

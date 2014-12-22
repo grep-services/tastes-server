@@ -18,7 +18,10 @@ class Image(models.Model):
 	# location = models.OneToOneField('Location', null=True, on_delete=models.SET_NULL)
         address = models.CharField(max_length=200, null=True) # it is possible that only coordinates exists except for address
 	# can be true with address.
-        point = models.PointField(srid=4326, null=True) # later, translation of point by json will be done. not now.
+        point = models.PointField(srid=4326, null=True) # later, translation of point by json will be done. not now. - can be done by rest-gis lib.
+	# instant distance. positive natural number.
+	# dist = models.PositiveIntegerField(null=True)
+	dist = models.CharField(max_length=25, null=True) # splitting takes more time. just send str and let client do that process.
 
 	tag = models.ManyToManyField('Tag', null=True) # there exists problem that 0-taged image
 	# for using distance(), order_by()
