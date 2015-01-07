@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
@@ -20,7 +22,7 @@ class ImageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Image
 		# fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'point', 'tag')
-		fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'dist', 'tag')
+		fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'dist', 'tag', 'positions')
 		depth = 1 # in docs, it deals with nested structure.
 
 class TagSerializer(serializers.ModelSerializer):

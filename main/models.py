@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # from django.db import models
 from django.contrib.gis.db import models
 
@@ -23,7 +25,9 @@ class Image(models.Model):
 	# dist = models.PositiveIntegerField(null=True)
 	dist = models.CharField(max_length=25, null=True) # splitting takes more time. just send str and let client do that process.
 
-	tag = models.ManyToManyField('Tag', null=True) # there exists problem that 0-taged image
+	tag = models.ManyToManyField('Tag', null=True) # there exists problem that 0-taged image - it prevented now in client.
+	# for clients tag positions - temporary.
+	positions = models.TextField(null=True) # dependents on tag
 	# for using distance(), order_by()
 	objects = models.GeoManager()
 	

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Django settings for server project.
 
@@ -19,7 +21,12 @@ def change_code_gracefull_reload(sig):
 	if autoreload.code_changed():
 		uwsgi.reload()
 """
-
+# encoding setting - not need now. and if needed, it may be done in certain part of the method also.
+"""
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+"""
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))

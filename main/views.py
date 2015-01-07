@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import render
 
 from django.http import HttpResponse
@@ -45,10 +47,14 @@ def image_add(request):
 		tag_str = request.POST.get('tag', None) # actually not null by client. and doesn't need format checking also.
 		if tag_str != None:
 			# google plugin tester sends chars strangely, so tested by phone directly.
-			tag_list = map(lambda str : str.strip(), tag_str.split(',')) # space parsing as a base.(for viewing)
+			tag_list = map(lambda string : string.strip(), tag_str.split(',')) # space parsing as a base.(for viewing)
 			for tag in tag_list:
 				# case insensitive later
 				image.tag.add(Tag.objects.get_or_create(name = tag)[0]) # duplication cannot happen.
+
+		positions = request.POST.get('positions', None)
+		if positions != None:
+			image.positions = positions
 			
 		image.save() # at least 1 tag remains even though other location, tags are not exists.
 
@@ -96,7 +102,7 @@ def image_list(request):
 	if request.method == 'POST':
 		tag_str = request.POST.get('tag', None)
 		if tag_str != None:
-                        tag_list = map(lambda str : str.strip(), tag_str.split(','))
+                        tag_list = map(lambda string : string.strip(), tag_str.split(','))
 			tags = Tag.objects.filter(name__in = tag_list) # pick tags that name of which is in the list. case insensitive later also
 			images = Image.objects.filter(tag__in = tags).distinct() # pick images that tag obj is in the given tag-list. - remove duplicates using distinct()
 
@@ -131,6 +137,22 @@ def test(request):
 		pnt2 = GEOSGeometry('SRID=4326;POINT(48.835797 2.329102)')
 		d = pnt.distance(pnt2) * 100
 		return HttpResponse(str(d))
+	return HttpResponse('failed')
+
+@csrf_exempt
+def utf_test(request):
+	# 여러모로 테스트해봤는데, 그냥 utf로 날아와도 잘 해결됨. 이 테스트는 종료. 다만 추후 안될경우 unicode, utf-8 변환 하기 전에 여기서 테스트해보기.
+	if request.method == 'POST':
+		tag_str = request.POST.get('string', None)
+		if tag_str != None:
+			import sys
+			reload(sys)
+			sys.setdefaultencoding('utf-8')
+			# uni = unicode(tag_str)
+			# utf = str(uni)
+			uni = tag_str.decode('utf-8')
+			utf = uni.encode('utf-8')
+			return HttpResponse(tag_str)
 	return HttpResponse('failed')
 
 @csrf_exempt

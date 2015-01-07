@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
@@ -31,6 +33,7 @@ urlpatterns = patterns('',
     url(r'^image/list/$', views.image_list),
     url(r'^tag/list/$', views.tag_list),
     url(r'^test/$', views.test),
+    url(r'^test/utf/$', views.utf_test),
 
     # rest
     # url(r'^', include(router.urls)),
