@@ -45,7 +45,7 @@ class Image(models.Model):
 		from django.core.files.base import ContentFile
 
 		image = Image.open(self.origin)
-		resized = image.resize((320, 320), Image.ANTIALIAS) # galaxy 5 1080, iphone 5 640 so 320 enough
+		resized = image.resize((image.size[0]/2, image.size[1]/2), Image.ANTIALIAS) # galaxy 5 1080, iphone 5 640 so 320 enough - changed to just 1/2.
 		handler = StringIO()
 
 		try:
