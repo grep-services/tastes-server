@@ -15,7 +15,8 @@ many to many : not cascade on deletes
 class Image(models.Model):
 	origin = models.ImageField(upload_to='origin')
 	thumbnail = models.ImageField(upload_to='thumbnail')
-	date = models.DateTimeField(auto_now_add=True)
+	# date = models.DateTimeField(auto_now_add=True)
+	time = models.CharField(max_length=20, null=True)
 	
 	# location = models.OneToOneField('Location', null=True, on_delete=models.SET_NULL)
         address = models.CharField(max_length=200, null=True) # it is possible that only coordinates exists except for address

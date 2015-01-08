@@ -32,6 +32,10 @@ def image_add(request):
 		image.origin = request.FILES['image']
 		image.save() # for many to many, image should have id.
 
+		time = request.POST.get('time', None)
+		if time != None:
+			image.time = time
+
 		address = request.POST.get('address', None)
 		if address != None: # seperated from coordinate now.
 			image.address = address

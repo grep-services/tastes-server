@@ -21,8 +21,8 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Image
-		# fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'point', 'tag')
-		fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'dist', 'tag', 'positions')
+		# fields = ('id', 'origin', 'thumbnail', 'date', 'address', 'dist', 'tag', 'positions')
+		fields = ('id', 'origin', 'thumbnail', 'time', 'address', 'dist', 'tag', 'positions')
 		depth = 1 # in docs, it deals with nested structure.
 
 class TagSerializer(serializers.ModelSerializer):
