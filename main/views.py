@@ -50,6 +50,7 @@ def image_add(request):
 
 		tag_str = request.POST.get('tag', None) # actually not null by client. and doesn't need format checking also.
 		if tag_str != None:
+			image.tag_str = tag_str
 			# google plugin tester sends chars strangely, so tested by phone directly.
 			tag_list = map(lambda string : string.strip(), tag_str.split(',')) # space parsing as a base.(for viewing)
 			for tag in tag_list:

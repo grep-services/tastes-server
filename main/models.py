@@ -27,6 +27,8 @@ class Image(models.Model):
 	dist = models.CharField(max_length=25, null=True) # splitting takes more time. just send str and let client do that process.
 
 	tag = models.ManyToManyField('Tag', null=True) # there exists problem that 0-taged image - it prevented now in client.
+	# for preserve tags ordering.
+	tag_str = models.TextField(null=True)
 	# for clients tag positions - temporary.
 	positions = models.TextField(null=True) # dependents on tag
 	# for using distance(), order_by()
@@ -46,7 +48,7 @@ class Image(models.Model):
 		from django.core.files.base import ContentFile
 
 		image = Image.open(self.origin)
-		resized = image.resize((image.size[0]/2, image.size[1]/2), Image.ANTIALIAS) # galaxy 5 1080, iphone 5 640 so 320 enough - changed to just 1/2.
+		resized = image.resize((image.size[0]/3, image.size[1]/3), Image.ANTIALIAS) # galaxy 5 1080, iphone 5 640 so 320 enough - changed to just 1/2.
 		handler = StringIO()
 
 		try:
