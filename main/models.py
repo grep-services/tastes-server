@@ -48,14 +48,27 @@ class Image(models.Model):
 		from django.core.files.base import ContentFile
 
 		image = Image.open(self.origin)
-		resized = image.resize((image.size[0]/3, image.size[1]/3), Image.ANTIALIAS) # galaxy 5 1080, iphone 5 640 so 320 enough - changed to just 1/2.
-		handler = StringIO()
+
+		width, height = image.size
+		width_origin = 720
+		width_thumbnail = width_origin / 3
+
+		# resize origin at thumbnail saving time.
+		resized_thumbnail = image.resize((width_thumbnail, height * width_thumbnail / width), Image.ANTIALIAS)
+		resized_origin = image.resize((width_origin, height * width_origin / width), Image.ANTIALIAS)
+
+		handler_thumbnail = StringIO()
+		handler_origin = StringIO()
 
 		try:
-			resized.save(handler, image.format) # save resized to handler with format of the 'image'
-			self.thumbnail.save(self.origin.name, ContentFile(handler.getvalue()))
+			resized_thumbnail.save(handler_thumbnail, image.format)
+			resized_origin.save(handler_origin, image.format)
+
+			self.thumbnail.save(self.origin.name, ContentFile(handler_thumbnail.getvalue()))
+			self.origin.save(self.origin.name, ContentFile(handler_origin.getvalue()))
 		finally:
-			handler.close()
+			handler_origin.close()
+			handler_thumbnail.close()
 		
 	def save(self, *args, **kwargs):
 		self.create_thumbnail()
