@@ -78,7 +78,7 @@ class Image(models.Model):
 	# delete files on object deletion. db rows will be also deleted cause of cascade option.
 	def delete(self, *args, **kwargs):
 		self.origin.delete()
-		self.thumbnale.delete()
+		self.thumbnail.delete()
 		super(Image, self).delete(*args, **kwargs)
 # at now, attatch to image. later. seperate it from image and integrate it. that will be useful.
 """
