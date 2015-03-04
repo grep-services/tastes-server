@@ -60,6 +60,10 @@ def image_add(request):
 		positions = request.POST.get('positions', None)
 		if positions != None:
 			image.positions = positions
+
+		orientations = request.POST.get('orientations', None)
+		if orientations != None:
+			image.orientations = orientations
 			
 		image.save() # at least 1 tag remains even though other location, tags are not exists.
 

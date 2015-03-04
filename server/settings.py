@@ -67,6 +67,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 INSTALLED_APPS = (
+    # advanced admin(suit)(safe to before admin app)
+    'suit',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

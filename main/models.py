@@ -31,6 +31,8 @@ class Image(models.Model):
 	tag_str = models.TextField(null=True)
 	# for clients tag positions - temporary.
 	positions = models.TextField(null=True) # dependents on tag
+	# for clients tag orientations - temporary.
+	orientations = models.TextField(null=True) # dependents on tag
 	# for using distance(), order_by()
 	objects = models.GeoManager()
 	
