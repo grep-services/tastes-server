@@ -64,11 +64,37 @@ def image_add(request):
 		orientations = request.POST.get('orientations', None)
 		if orientations != None:
 			image.orientations = orientations
+
+		passcode = request.POST.get('passcode', None)
+		if passcode != None:
+			image.passcode = passcode
 			
 		image.save() # at least 1 tag remains even though other location, tags are not exists.
 
 		return HttpResponse('success')
 		
+	return HttpResponse('failed')
+
+@csrf_exempt
+def image_delete(request):
+	if request.method == 'POST':
+		image_id = request.POST.get('id', None)
+
+		if image_id != None:
+			try:
+				image = Image.objects.get(pk = image_id)
+
+				# first, remove relation(actual objects will not be removed)
+				image.tag.clear()
+				# and then, delete Image object.(it will continue on its own delete(overrided) method.)
+				image.delete()
+
+				return HttpResponse('success delete')
+			except:
+				return HttpResonse('failed. no image matching to the id')
+
+		return HttpResopnse('failed. no id')
+
 	return HttpResponse('failed')
 
 @csrf_exempt

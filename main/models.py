@@ -35,6 +35,8 @@ class Image(models.Model):
 	orientations = models.TextField(null=True) # dependents on tag
 	# for using distance(), order_by()
 	objects = models.GeoManager()
+	# passcode - can be null - treated as cannot-removable-image
+	passcode = models.CharField(max_length=10, null=True)
 	
 	# save. for thumbnail.
 	

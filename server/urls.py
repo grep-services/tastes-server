@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     # test
     # url(r'^image/get/$', views.get_image),
     url(r'^image/add/$', views.image_add),
+    url(r'^image/delete/$', views.image_delete),
     url(r'^image/tag/$', views.image_tag),
     url(r'^image/get/$', views.image_get),
     url(r'^image/list/$', views.image_list),
